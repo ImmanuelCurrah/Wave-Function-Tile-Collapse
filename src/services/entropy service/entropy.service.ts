@@ -52,7 +52,7 @@ export class EntropyService {
     }
     return {
       options: [
-        ...this.rulesEngine.findOptions(this.parseTileNeighbors(forIndex), forIndex),
+        ...this.rulesEngine.findOptions(this.parseTileNeighbors(forIndex)),
       ],
       atIndex: forIndex,
     };
@@ -68,18 +68,6 @@ export class EntropyService {
       bottom: this.grid[indexOfFocusedTile + rowLength],
       left: isStart ? undefined : this.grid[indexOfFocusedTile - 1],
       right: isEnd ? undefined : this.grid[indexOfFocusedTile + 1],
-      topRight: isEnd
-        ? undefined
-        : this.grid[indexOfFocusedTile - (rowLength - 1)],
-      topLeft: isStart
-        ? undefined
-        : this.grid[indexOfFocusedTile - (rowLength + 1)],
-      bottomRight: isEnd
-        ? undefined
-        : this.grid[indexOfFocusedTile + (rowLength + 1)],
-      bottomLeft: isStart
-        ? undefined
-        : this.grid[indexOfFocusedTile + (rowLength - 1)],
     };
   }
 

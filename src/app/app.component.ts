@@ -13,7 +13,7 @@ import { GRID_SIZE } from '../services/grid service/injection-tokens/grid.tokens
   providers: [
     GridService,
     EntropyService,
-    { provide: GRID_SIZE, useValue: 80 },
+    { provide: GRID_SIZE, useValue: 25 },
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -32,12 +32,9 @@ export class AppComponent {
   }
 
   start(): void {
-    let count = 2;
     const intervalId = setInterval(() => {
-      const tile = this.entropyService.getTileToSet();
-
-      this.gridService.setGrid(tile.index, tile.tile, count);
-      count++;
+      const { index, tile } = this.entropyService.getTileToSet();
+      this.gridService.setGrid(index, tile);
 
       if (this.generatedGrid.every((tile) => tile.isCollapsed)) {
         clearInterval(intervalId);

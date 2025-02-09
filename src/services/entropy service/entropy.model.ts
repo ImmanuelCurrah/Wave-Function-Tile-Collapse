@@ -10,8 +10,4 @@ export interface TileNeighbors {
     bottom: EntropyTile | undefined
     left: EntropyTile | undefined
     right: EntropyTile | undefined
-    topRight: EntropyTile | undefined
-    topLeft: EntropyTile | undefined
-    bottomRight: EntropyTile | undefined
-    bottomLeft: EntropyTile | undefined
 }

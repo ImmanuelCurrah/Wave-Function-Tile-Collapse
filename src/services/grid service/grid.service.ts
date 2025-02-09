@@ -37,9 +37,9 @@ export class GridService {
     return grid;
   }
 
-  setGrid(index: number, newTile: Tile, isOrderNumber: number) {
+  setGrid(index: number, newTile: Tile) {
     this.grid.update((grid) => {
-      grid[index] = { tile: newTile, isCollapsed: true, isOrder: isOrderNumber };
+      grid[index] = { tile: newTile, isCollapsed: true };
       return grid;
     });
   }
@@ -56,7 +56,7 @@ export class GridService {
 
   setRandomFirstTile(): void {
     const { index, tile } = this.pickRandomFirstTile();
-    this.setGrid(index, tile, 1);
+    this.setGrid(index, tile);
   }
 
   resetGrid(): void {

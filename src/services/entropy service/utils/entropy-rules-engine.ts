@@ -21,11 +21,7 @@ import {
 import { TileNeighbors } from '../entropy.model';
 
 export class EntropyRulesEngine {
-  private aboveTileRules(
-    tileAbove: Tile,
-    tileTopRight: Tile | undefined,
-    tileTopLeft: Tile | undefined
-  ): Tile[] {
+  private aboveTileRules(tileAbove: Tile): Tile[] {
     const allowedTiles: Tile[] = [];
     if (isTileUp(tileAbove)) {
       allowedTiles.push(tileDown, blankTile);
@@ -90,7 +86,7 @@ export class EntropyRulesEngine {
     return allowedTiles;
   }
 
-  findOptions(tileNeighbors: TileNeighbors, atIndex: number): Tile[] {
+  findOptions(tileNeighbors: TileNeighbors): Tile[] {
     const totalTileOptions: (
       | TileUp
       | TileDown
@@ -98,68 +94,37 @@ export class EntropyRulesEngine {
       | TileLeft
       | TileBlank
     )[][] = [];
-
-    const topOptions = [];
-    const bottomOptions = [];
-    const rightOptions = [];
-    const leftOptions = [];
-    const {
-      top,
-      bottom,
-      left,
-      right,
-      topRight,
-      topLeft,
-      bottomRight,
-      bottomLeft,
-    } = tileNeighbors;
+    const { top, bottom, left, right } = tileNeighbors;
 
     if (top !== undefined && top.isCollapsed) {
-      topOptions.push(
-        ...this.aboveTileRules(top.tile, topRight?.tile, topLeft?.tile)
-      );
+      totalTileOptions.push(this.aboveTileRules(top.tile));
     }
 
     if (bottom !== undefined && bottom.isCollapsed) {
-      bottomOptions.push(...this.belowTileRules(bottom.tile));
+      totalTileOptions.push(this.belowTileRules(bottom.tile));
     }
 
     if (left !== undefined && left.isCollapsed) {
-      leftOptions.push(...this.leftTileRules(left.tile));
+      totalTileOptions.push(this.leftTileRules(left.tile));
     }
 
     if (right !== undefined && right.isCollapsed) {
-      rightOptions.push(...this.rightTileRules(right.tile));
+      totalTileOptions.push(this.rightTileRules(right.tile));
     }
 
-    if (topOptions.length > 0) {
-      totalTileOptions.push(topOptions);
-    }
+    return this.parseOptions(totalTileOptions);
+  }
 
-    if (bottomOptions.length > 0) {
-      totalTileOptions.push(bottomOptions);
-    }
-
-    if (leftOptions.length > 0) {
-      totalTileOptions.push(leftOptions);
-    }
-
-    if (rightOptions.length > 0) {
-      totalTileOptions.push(rightOptions);
-    }
-
-    if (totalTileOptions.length > 0) {
-      const reduce = totalTileOptions.reduce((p, c) =>
-        p.filter((e) => c.includes(e))
-      );
-
+  private parseOptions(
+    options: (TileUp | TileDown | TileRight | TileLeft | TileBlank)[][]
+  ): Tile[] {
+    if (options.length > 0) {
+      const reduce = options.reduce((p, c) => p.filter((e) => c.includes(e)));
       if (reduce.length === 0) {
         return [blankTile];
       }
-
       return reduce;
     }
-
     return [];
   }
 }

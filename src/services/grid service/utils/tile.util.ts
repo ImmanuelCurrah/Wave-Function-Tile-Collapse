@@ -64,7 +64,6 @@ export const blankTile: TileBlank = [blankColumn, blankColumn, blankColumn];
 export interface EntropyTile {
   tile: Tile, 
   isCollapsed: boolean
-  isOrder?: number
 }
 
 export type Grid = EntropyTile[];
