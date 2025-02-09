@@ -1,0 +1,8 @@
+.outline {
+  border: 0.25px solid rbg(0.147, 0.004, 49.25);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+}
