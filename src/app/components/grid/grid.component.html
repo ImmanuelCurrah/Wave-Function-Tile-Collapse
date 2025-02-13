@@ -1,0 +1,20 @@
+@if(grid()) {
+<div class="h-200 w-200 outline">
+  <mat-grid-list [cols]="numberOfColumns()">
+    @for (entropyTile of grid(); track $index) {
+    <mat-grid-tile class="relative bg-stone-950 outline">
+      @for(row of entropyTile.tile; track $index) {
+      <div class="w-full h-full flex flex-col justify-evenly">
+        @for(block of row; track $index) {
+        <div
+          [ngClass]="{ 'h-full bg-green-400': block === 1, 'h-full': true }"
+        ></div>
+        }
+      </div>
+      }
+    </mat-grid-tile>
+    }
+  </mat-grid-list>
+</div>
+
+}

@@ -1,49 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 import { GridService } from '../services/grid service/grid.service';
 import { Grid } from '../services/grid service/utils/tile.util';
-
 import { CommonModule } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { EntropyService } from '../services/entropy service/entropy.service';
-import { GRID_SIZE } from '../services/grid service/injection-tokens/grid.tokens';
+import { CollapseService } from '../services/collapse service/collapse.service';
+import { GridComponent } from './components/grid/grid.component';
+import { ButtonsComponent } from './components/burttons/buttons.component';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, MatGridListModule],
-  providers: [
-    GridService,
-    EntropyService,
-    { provide: GRID_SIZE, useValue: 25 },
-  ],
+  imports: [CommonModule, MatGridListModule, GridComponent, ButtonsComponent],
+  providers: [CollapseService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent {
   generatedGrid: Grid;
-  numberOfColumns: number;
+  numberOfColumns: Signal<number>;
 
   constructor(
     private readonly gridService: GridService,
-    private readonly entropyService: EntropyService
+    private readonly collapseService: CollapseService
   ) {
     this.generatedGrid = this.gridService.generatedGrid();
-    this.numberOfColumns = Math.sqrt(this.generatedGrid.length);
-    this.gridService.setRandomFirstTile();
+    this.numberOfColumns = computed(() => Math.sqrt(this.generatedGrid.length));
   }
 
   start(): void {
-    const intervalId = setInterval(() => {
-      const { index, tile } = this.entropyService.getTileToSet();
-      this.gridService.setGrid(index, tile);
-
-      if (this.generatedGrid.every((tile) => tile.isCollapsed)) {
-        clearInterval(intervalId);
-        return;
-      }
-    }, 1);
+    this.collapseService.collapse();
   }
 
   reset(): void {
-    this.gridService.resetGrid();
+    this.collapseService.resetGrid();
   }
 }
